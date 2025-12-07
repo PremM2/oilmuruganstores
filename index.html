@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Oil Murugan - Credit & Purchase Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Oil Murugan — Credit Manager</h1>
+    <div class="top-actions">
+      <button id="backupBtn">Export JSON</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none"/>
+      <button id="importBtn">Import JSON</button>
+      <button id="clearAllBtn" title="Clear all data (irreversible)">Clear Data</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="tabs">
+      <button data-tab="dashboard" class="active">Dashboard</button>
+      <button data-tab="customers">Customers</button>
+      <button data-tab="purchases">Purchases</button>
+      <button data-tab="expenses">Expenses</button>
+      <button data-tab="sources">Cash Sources</button>
+      <button data-tab="reports">Reports</button>
+      <button data-tab="settings">Settings</button>
+    </nav>
+
+    <section id="dashboard" class="tabcontent active">
+      <div class="cards">
+        <div class="card">
+          <h3>Total Outstanding</h3>
+          <p id="totalOutstanding">₹0</p>
+        </div>
+        <div class="card">
+          <h3>Today Purchases</h3>
+          <p id="todayPurchases">₹0</p>
+        </div>
+        <div class="card">
+          <h3>Total Expenses</h3>
+          <p id="totalExpenses">₹0</p>
+        </div>
+        <div class="card">
+          <h3>Kalla Box</h3>
+          <p id="kallaBalance">₹0</p>
+        </div>
+      </div>
+
+      <div class="recent">
+        <h3>Recent Activity</h3>
+        <ul id="recentList"></ul>
+      </div>
+    </section>
+
+    <section id="customers" class="tabcontent">
+      <h2>Customers</h2>
+      <form id="addCustomerForm" class="form-grid">
+        <input id="custName" placeholder="Name" required />
+        <input id="custMobile" placeholder="Mobile (10 digits)" pattern="[0-9]{10}" />
+        <input id="custOpening" placeholder="Opening Balance (0)" type="number" min="0" value="0" />
+        <button type="submit">Add Customer</button>
+      </form>
+
+      <div class="list-area">
+        <h3>Customer List</h3>
+        <table id="customersTable">
+          <thead><tr><th>Name</th><th>Mobile</th><th>Balance</th><th>Actions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="purchases" class="tabcontent">
+      <h2>Purchases (Dealer)</h2>
+      <form id="addPurchaseForm" class="form-grid">
+        <input id="pDealer" placeholder="Dealer name" required />
+        <input id="pAmount" placeholder="Amount" type="number" min="0" required />
+        <select id="pSource">
+          <option value="kalla">Kalla box</option>
+          <option value="home">Home cash</option>
+          <option value="bank">Bank</option>
+          <option value="upi">UPI</option>
+          <option value="other">Other</option>
+        </select>
+        <input id="pDate" type="date" />
+        <button type="submit">Add Purchase</button>
+      </form>
+
+      <div class="list-area">
+        <h3>Purchase List</h3>
+        <table id="purchasesTable">
+          <thead><tr><th>Date</th><th>Dealer</th><th>Amount</th><th>Source</th><th>Actions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="expenses" class="tabcontent">
+      <h2>Expenses</h2>
+      <form id="addExpenseForm" class="form-grid">
+        <input id="eTitle" placeholder="Title (diesel, salary...)" required />
+        <input id="eAmount" placeholder="Amount" type="number" min="0" required />
+        <select id="eSource">
+          <option value="kalla">Kalla box</option>
+          <option value="home">Home cash</option>
+          <option value="bank">Bank</option>
+          <option value="upi">UPI</option>
+          <option value="other">Other</option>
+        </select>
+        <input id="eDate" type="date" />
+        <button type="submit">Add Expense</button>
+      </form>
+
+      <div class="list-area">
+        <h3>Expense List</h3>
+        <table id="expensesTable">
+          <thead><tr><th>Date</th><th>Title</th><th>Amount</th><th>Source</th><th>Actions</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="sources" class="tabcontent">
+      <h2>Cash Sources</h2>
+      <div class="sources-grid">
+        <div class="source-card">
+          <h4>Kalla box</h4><p id="src-kalla">₹0</p><button data-src="kalla" class="addCash">Add/Remove</button>
+        </div>
+        <div class="source-card">
+          <h4>Home cash</h4><p id="src-home">₹0</p><button data-src="home" class="addCash">Add/Remove</button>
+        </div>
+        <div class="source-card">
+          <h4>Bank</h4><p id="src-bank">₹0</p><button data-src="bank" class="addCash">Add/Remove</button>
+        </div>
+        <div class="source-card">
+          <h4>UPI</h4><p id="src-upi">₹0</p><button data-src="upi" class="addCash">Add/Remove</button>
+        </div>
+        <div class="source-card">
+          <h4>Other</h4><p id="src-other">₹0</p><button data-src="other" class="addCash">Add/Remove</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="reports" class="tabcontent">
+      <h2>Reports & Statements</h2>
+      <div class="report-actions">
+        <label>Customer:
+          <select id="reportCustomerSelect"><option value="">--select--</option></select>
+        </label>
+        <button id="generateStatement">Generate Statement (print)</button>
+      </div>
+      <div id="statementArea" class="statement"></div>
+    </section>
+
+    <section id="settings" class="tabcontent">
+      <h2>Settings & Utilities</h2>
+      <div class="settings-grid">
+        <label>Auto-calc balances: <input id="autoCalc" type="checkbox" checked /></label>
+        <div>
+          <h4>WhatsApp reminder template</h4>
+          <textarea id="waTemplate" rows="3">Dear {name}, your outstanding at Oil Murugan is ₹{balance}. Please pay when convenient. - Oil Murugan</textarea>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal for add/remove cash -->
+  <div id="cashModal" class="modal hidden">
+    <div class="modal-body">
+      <h3 id="cashModalTitle">Modify Cash</h3>
+      <input id="cashAmount" type="number" min="0" placeholder="Amount" />
+      <select id="cashAction"><option value="add">Add</option><option value="remove">Remove</option></select>
+      <button id="cashApply">Apply</button>
+      <button id="cashCancel">Cancel</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <small>Made for Oil Murugan • Store manager friendly • Host on GitHub Pages</small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
